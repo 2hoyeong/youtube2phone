@@ -1,0 +1,16 @@
+{
+    "name": "Youtube to Phone",
+    "version": "1.0",
+    "description": "Watching youtube on computer to smartphone",
+    "manifest_version": 2,
+
+    "browser_action" : {
+        "default_popup": "popup.html",
+        "default_icon": "icon.png"
+    },
+
+    "permissions": [
+        "http://www.youtube.com/",
+        "https://www.youtube.com/"
+    ]
+}
