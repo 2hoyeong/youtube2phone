@@ -8,10 +8,7 @@ function getParameterByName(name, url) {
     return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
 
-var url;
 var qrcode;
-var time;
-var videoId;
 chrome.tabs.executeScript({
     code: '(' + function () {
         return {
@@ -20,21 +17,28 @@ chrome.tabs.executeScript({
         };
     } + ')()'
 }, function (r) {
-    var result = r[0];
-    if (result) {
-        url = new URL(result._url);
-        videoId = getParameterByName("v", url);
-        time = result._time.split(":")[0] * 60 + result._time.split(":")[1] * 1;
-        console.log(time);
-        if (url.hostname === "www.youtube.com" && videoId !== null) {
-            qrcode.clear();
-            qrcode.makeCode("https://" + url.hostname.toString() + "/watch?v=" + videoId + "?t=" + time);
+    var err;
+    if (r !== undefined) {
+        var result = r[0];
+        if (result) {
+            var url = new URL(result._url);
+            var videoId = getParameterByName("v", url);
+            var time = result._time.split(":")[0] * 60 + result._time.split(":")[1] * 1;
+            console.log(time);
+            if (url.hostname === "www.youtube.com" && videoId !== null) {
+                qrcode.clear();
+                qrcode.makeCode("https://" + url.hostname.toString() + "/watch?v=" + videoId + "?t=" + time);
+            } else {
+                err = "Only working on youtube";
+            }
         } else {
-            document.querySelector('#warning').innerHTML = "Only working on youtube";
+            err = "Only working on youtube"
         }
     } else {
-        document.querySelector('#warning').innerHTML = "Only working on youtube";
+        err = "Only working on youtube";
     }
+    
+    if (err) document.querySelector('#warning').innerHTML = err;
 });
 
 window.onload = () => {
